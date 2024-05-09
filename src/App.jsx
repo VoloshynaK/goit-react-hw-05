@@ -1,34 +1,54 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import {Routes, Route} from 'react-router-dom'
+import { useState, useEffect } from 'react'
+import HomePage from './pages/HomePage/HomePage.jsx'
+import MoviesPage from './pages/MoviesPage/MoviesPage.jsx'
+import MovieDetailsPage from './pages/MovieDetailsPage/MovieDetailsPage.jsx'
+import NotFoundPage from './pages/NotFoundPage/NotFoundPage.jsx'
+import Navigation from './components/Navigation/Navigation.jsx'
+import MovieCast from './components/MovieCast/MovieCast.jsx'
+import MovieReviews from './components/MovieReviews/MovieReviews.jsx'
+
+import {fetchTrendMovies} from './tmdbApi.js'
+
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [trendMovies, setTrendMovies] = useState([]);
+
+  useEffect(() => {
+    async function getTrendMovies() {
+      try {
+        const data = await fetchTrendMovies();
+        setTrendMovies(data);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    getTrendMovies();
+  }, [trendMovies]);
+  
+  
+
+  const getMovieById = (movieId) => {
+    return trendMovies.find((movie => movie.id === movieId));
+  }
+
+  
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+      <>
+        <Navigation />
+
+        <Routes>
+          <Route path="/" element={<HomePage items={trendMovies}/>} />
+          <Route path="/movies" element={<MoviesPage />} />
+          <Route path="/movies/:movieId" element={<MovieDetailsPage getMovieById={getMovieById}/>}> 
+            <Route path="cast" element={<MovieCast/>}/>
+            <Route path="reviews" element={<MovieReviews/>}/>
+          </Route>
+          <Route path="*" element={<NotFoundPage />} />
+        </Routes>
+      </>
   )
 }
 
