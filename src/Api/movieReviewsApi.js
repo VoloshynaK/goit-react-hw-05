@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export async function fetchTrendMovies () {
+export default async function fetchMovieReviews (movieId) {
     const options = {
         method: 'GET',
         headers: {
@@ -9,6 +9,6 @@ export async function fetchTrendMovies () {
         }
     };
 
-    const response = await axios.get('https://api.themoviedb.org/3/trending/movie/day?language=en-US', options);
+    const response = await axios.get(`https://api.themoviedb.org/3/movie/${movieId}/reviews`, options);
     return response.data.results;
 }

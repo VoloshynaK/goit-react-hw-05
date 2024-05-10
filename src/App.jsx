@@ -8,11 +8,19 @@ import Navigation from './components/Navigation/Navigation.jsx'
 import MovieCast from './components/MovieCast/MovieCast.jsx'
 import MovieReviews from './components/MovieReviews/MovieReviews.jsx'
 
-import {fetchTrendMovies} from './tmdbApi.js'
+import fetchTrendMovies from './Api/trendMoviesApi.js'
+import fetchMovieDetails from './Api/movieDetailsApi.js'
+import fetchMovieCast from './Api/movieCastApi.js'
+import fetchMovieReviews from './Api/movieReviewsApi.js'
+import fetchMovieGenres from './Api/movieGenresApi.js'
 
 
 function App() {
   const [trendMovies, setTrendMovies] = useState([]);
+  const [imageDetails, setImageDetails] = useState({});
+  const [currMovieCast, setCurrMovieCast] = useState([]);
+  const [currMovieReviews, setCurrMovieReviews] = useState([]);
+  const [genres, setGenres] = useState([]);
 
   useEffect(() => {
     async function getTrendMovies() {
@@ -26,14 +34,49 @@ function App() {
 
     getTrendMovies();
   }, [trendMovies]);
-  
-  
 
-  const getMovieById = (movieId) => {
-    return trendMovies.find((movie => movie.id === movieId));
+  useEffect(() => {
+    async function getImageDetails () {
+      try {
+        const data = await fetchMovieDetails();
+        setImageDetails({baseUrl: data.base_url, size: data.poster_sizes[3]});
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getImageDetails();
+  }, [imageDetails]);
+
+  async function getMovieCast (movieId) {
+    try {
+      const movieCast = await fetchMovieCast(movieId);
+      setCurrMovieCast(movieCast);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
-  
+  async function getMovieReviews (movieId) {
+    try {
+      const movieReviews = await fetchMovieReviews(movieId);
+      setCurrMovieReviews(movieReviews);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  useEffect(() => {
+    async function getMovieGenres () {
+      try {
+        const genres = await fetchMovieGenres();
+        setGenres(genres);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    getMovieGenres();
+  }, [genres]);
+
 
   return (
       <>
@@ -42,9 +85,9 @@ function App() {
         <Routes>
           <Route path="/" element={<HomePage items={trendMovies}/>} />
           <Route path="/movies" element={<MoviesPage />} />
-          <Route path="/movies/:movieId" element={<MovieDetailsPage getMovieById={getMovieById}/>}> 
-            <Route path="cast" element={<MovieCast/>}/>
-            <Route path="reviews" element={<MovieReviews/>}/>
+          <Route path="/movies/:movieId" element={<MovieDetailsPage trendMovies={trendMovies} imageDetails={imageDetails} getMovieCast={getMovieCast} getMovieReviews={getMovieReviews} movieGenres={genres}/>}> 
+            <Route path="cast" element={<MovieCast casts={currMovieCast}/>}/>
+            <Route path="reviews" element={<MovieReviews reviews={currMovieReviews}/>}/>
           </Route>
           <Route path="*" element={<NotFoundPage />} />
         </Routes>
