@@ -1,16 +1,22 @@
-import {NavLink} from 'react-router-dom'
+import {NavLink, Outlet} from 'react-router-dom'
+import { Suspense } from 'react'
+import Loader from '../Loader/Loader'
 import css from './Navigation.module.css'
+
 
 export default function Navigation () {
     return (
-        <header className={css.header}>
-            <nav className={css.nav}>
-            <NavLink to="/" className={css.navLink}>
+        <header className={css.container}>
+            <nav>
+            <NavLink to="/" end>
                 Home
             </NavLink>
-            <NavLink to="/movies" className={css.navLink}>
+            <NavLink to="/movies">
                 Movies
             </NavLink>
+            <Suspense fallback={<Loader/>}>
+                <Outlet />
+            </Suspense>
             </nav>
         </header>
     )

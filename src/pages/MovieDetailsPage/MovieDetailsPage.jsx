@@ -1,55 +1,72 @@
-import { useParams, Link, Outlet } from "react-router-dom"
+import { useParams, useLocation, Link, Outlet} from "react-router-dom"
+import {fetchMovieDetails} from '../../Api/apiServices'
+import { useState, useEffect } from 'react'
+import toast from 'react-hot-toast'
 
-export default function MovieDetailsPage ({trendMovies, imageDetails, getMovieCast, getMovieReviews, movieGenres}) {
+const notify = () => toast.error('Something went wrong. Please, try again!', {
+    style: {
+      border: '1px solid #000000',
+      padding: '16px',
+      color: '#000000',
+    },
+    iconTheme: {
+      primary: '#000000',
+      secondary: '#f5f5f5',
+    },
+  });
 
-    const getMovieById = (movieId) => {
-        return trendMovies.find((movie => movie.id === movieId));
-    }
-    
-    const {movieId} = useParams();
-    const movie = getMovieById(Number(movieId));
 
-    getMovieCast(Number(movieId));
-    getMovieReviews(Number(movieId));
+export default function MovieDetailsPage () {
+    const [movieDetails, setMovieDetails] = useState({});
+    const location = useLocation();
+    const { movieId } = useParams();
 
-    const imageUrl = `${imageDetails.baseUrl}${imageDetails.size}/${movie.poster_path
-    }`;
+    useEffect(() => {
+        const getMovieDetails = async () => {
+            try {
+                const data = await fetchMovieDetails(movieId);
+                setMovieDetails(data)
+            } catch (error) {
+                notify();
+                console.log(error);
+            }
+        }
+        getMovieDetails();
+    }, [movieId]);
 
-    
-
-    const getGenresName = () => {
-        const currMovieGenre = [];
-        const genres = movie.genre_ids;
-        genres.map(genreId => {
-            const genresName = movieGenres.find(genre => genre.id === genreId);
-            currMovieGenre.push(genresName.name);
-        })
-        return currMovieGenre;
-        
-    };
-    const genreNames = getGenresName();
+    const {original_title, overview, genres, poster_path, vote_average } = movieDetails;
+    const scoreToFixed = Number(vote_average).toFixed(2);
 
     return (
         <main>
-            <Link to='/'>Go back</Link>
-            <img src={imageUrl} alt='Movie poster' />
+            <Link to={location.state?.from ?? '/'}>Go back</Link>
+            <img src={poster_path
+              ? `https://image.tmdb.org/t/p/w300${poster_path}`
+              : `http://www.suryalaya.org/images/no_image.jpg`} 
+              loading='lazy' alt='Movie poster' />
             <div>
-                <h1>{movie.title}</h1>
-                <p>User score: {movie.vote_average.toFixed(2)}</p>
+                <h1>{original_title}</h1>
+                <p>User score: {scoreToFixed}</p>
                 <h2>Overview</h2>
-                <p>{movie.overview}</p>
+                <p>{overview}</p>
                 <h2>Genres</h2>
-                <p>{genreNames.join(", ")}</p>
+                <ul>{genres &&
+                    genres.length &&
+                    genres.map(({ id, name }) => <li key={id}>{name}</li>)}
+                </ul>
             </div>
-            <p>Additional information</p>
-            <ul>
-                <li>
-                    <Link to='cast'>Cast</Link>
-                </li>
-                <li>
-                    <Link to='reviews'>Reviews</Link>
-                </li>
-            </ul>
+            <div>
+                <p>Additional information</p>
+                <ul>
+                    <li>
+                        <Link to="cast" state={{ ...location.state }}>Cast</Link>
+                    </li>
+                    <li>
+                        {' '}
+                        <Link to="reviews" state={{ ...location.state }}>Reviews</Link>
+                    </li>
+                </ul>
+            </div>
             <Outlet />
         </main>
     )
