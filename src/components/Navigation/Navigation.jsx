@@ -6,12 +6,12 @@ import css from './Navigation.module.css'
 
 export default function Navigation () {
     return (
-        <header className={css.container}>
-            <nav>
-            <NavLink to="/" end>
+        <header className='container'>
+            <nav className={css.nav}>
+            <NavLink to="/" end className={css.navLink}>
                 Home
             </NavLink>
-            <NavLink to="/movies">
+            <NavLink to="/movies" className={css.navLink}>
                 Movies
             </NavLink>
             <Suspense fallback={<Loader/>}>

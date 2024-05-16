@@ -2,6 +2,7 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { fetchMovieCast } from '../../Api/apiServices';
 import toast from 'react-hot-toast'
+import css from './MovieCast.module.css'
 
 const notify = () => toast.error('Something went wrong. Please, try again!', {
     style: {
@@ -33,10 +34,10 @@ export default function MovieCast () {
   }, [movieId]);
 
   return (
-    <ul>
+    <ul className={css.castList}>
       {castList.length > 0 
         ? castList.map(({ id, name, profile_path, character }) => (
-          <li key={id}>
+          <li key={id} className={css.listItem}>
             <img
               src={
                 profile_path
@@ -45,9 +46,10 @@ export default function MovieCast () {
               }
               alt="actor"
               loading="lazy"
+              width='120'
             />
-            <h3>{name}</h3>
-            <p> Character: {character}</p>
+            <h3 className={css.name}>{name}</h3>
+            <p className={css.character}> Character: {character}</p>
           </li>
         ))
         : "Sorry, there isn't any info :("

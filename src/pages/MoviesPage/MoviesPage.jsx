@@ -4,6 +4,7 @@ import {fetchMovieByKeyword} from '../../Api/apiServices'
 import SearchBar from '../../components/SearchBar/SearchBar'
 import Loader from '../../components/Loader/Loader'
 import toast from 'react-hot-toast'
+import css from './MoviesPage.module.css'
 
 const notify = (msg) => toast.error(`${msg}`, {
     style: {
@@ -63,21 +64,23 @@ export default function MoviesPage () {
 
 
     return (
-        <main>
-            <SearchBar onSubmit={handleSubmit}/>
-            {error && <p>There is no movies with this request. Please, try again</p>}
-            <ul>
-                {moviesList.map(movie => {
-                    return (
-                        <li key={movie.id}>
-                            <Link to={`/movies/${movie.id}`} state={{ from: location }}>
-                                {movie.original_title || movie.name}
-                            </Link>
-                        </li>
-                    );
-                })}
-                {loading && <Loader />}
-            </ul>
+        <main className="container">
+            <div className={css.moviesPage}>
+                <SearchBar onSubmit={handleSubmit}/>
+                {error && <p>There is no movies with this request. Please, try again</p>}
+                <ul className={css.movieList}>
+                    {moviesList.map(movie => {
+                        return (
+                            <li key={movie.id}>
+                                <Link to={`/movies/${movie.id}`} state={{ from: location }} className={css.item}>
+                                    {movie.original_title || movie.name}
+                                </Link>
+                            </li>
+                        );
+                    })}
+                    {loading && <Loader />}
+                </ul>
+            </div>
         </main>
     )
 }

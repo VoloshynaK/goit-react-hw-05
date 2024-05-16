@@ -3,6 +3,7 @@ import { useState, useEffect } from 'react'
 import {fetchTrendMovies} from '../../Api/apiServices'
 import Loader from '../../components/Loader/Loader'
 import toast from 'react-hot-toast'
+import css from './HomePage.module.css'
 
 const notify = () => toast.error('Something went wrong. Please, try again!', {
     style: {
@@ -39,18 +40,20 @@ export default function HomePage() {
     }, [])
 
     return (
-        <main>
-            <h1>Trending Today</h1>
-            <ul>
-                {trendMovies.map(movie => (
-                    <li key={movie.id}>
-                        <Link to={`/movies/${movie.id}`} state={{ from: location }}>
-                            {movie.title}
-                        </Link>
-                    </li>
-                ))}
-                {loading && <Loader />}
-            </ul>
+        <main className='container'>
+            <div className={css.homePage}>
+                <h1>Trending Today</h1>
+                <ul className={css.movieList}>
+                    {trendMovies.map(movie => (
+                        <li key={movie.id} >
+                            <Link to={`/movies/${movie.id}`} state={{ from: location }} className={css.item}>
+                                {movie.title}
+                            </Link>
+                        </li>
+                    ))}
+                    {loading && <Loader />}
+                </ul>
+            </div>
         </main>
 
     )

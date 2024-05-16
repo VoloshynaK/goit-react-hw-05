@@ -1,10 +1,11 @@
 import PropagateLoader from "react-spinners/PropagateLoader";
+import css from './Loader.module.css'
 
 const Loader = ({loading}) => {
     return (
-       <div>
+       <div className={css.loader}>
             <PropagateLoader
-                color="#36d7b7"
+                color="#b85c07"
                 cssOverride={null}
                 loading={loading}
                 size={15}

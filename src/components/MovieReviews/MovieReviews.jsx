@@ -2,6 +2,8 @@ import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { fetchMovieReviews } from '../../Api/apiServices';
 import toast from 'react-hot-toast'
+import { FaUserCircle } from "react-icons/fa";
+import css from './MovieReviews.module.css'
 
 const notify = () => toast.error('Something went wrong. Please, try again!', {
     style: {
@@ -32,16 +34,18 @@ export default function MovieReviews () {
     }, [movieId]);
 
     return (
-        <ul>
-            { reviewsList.length > 0 
-                ? reviewsList.map(({author, content, id}) => (
-                        <li key={id}>
-                            <p>Author: {author}</p>
-                            <p>{content}</p>
-                        </li>
-                    ))
-                : <p>We do not have any reviews for this movie yet</p>
-            }
-        </ul>
+        <main className='container'>
+            <u>
+                { reviewsList.length > 0 
+                    ? reviewsList.map(({author, content, id}) => (
+                            <li key={id} className={css.item}>
+                                <p className={css.name}><FaUserCircle className={css.icon}/>{author}</p>
+                                <p className={css.content}>{content}</p>
+                            </li>
+                        ))
+                    : <p>We do not have any reviews for this movie yet</p>
+                }
+            </u>
+        </main>
     );
 }
