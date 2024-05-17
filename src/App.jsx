@@ -1,4 +1,4 @@
-import {Routes, Route} from 'react-router-dom'
+import {Routes, Route, Suspense} from 'react-router-dom'
 import {lazy} from 'react'
 
 import NotFoundPage from './pages/NotFoundPage/NotFoundPage.jsx'
@@ -15,16 +15,18 @@ function App() {
   return (
       <>
         <Navigation />
-
-        <Routes>
-          <Route path="/" element={<HomePage/>} />
-          <Route path="/movies" element={<MoviesPage />} />
-          <Route path="/movies/:movieId" element={<MovieDetailsPage />}> 
-            <Route path="cast" element={<MovieCast />}/>
-            <Route path="reviews" element={<MovieReviews />}/>
-          </Route>
-          <Route path="*" element={<NotFoundPage />} />
-        </Routes>
+        <Suspense>
+          <Routes>
+            <Route path="/" element={<HomePage/>} />
+            <Route path="/movies" element={<MoviesPage />} />
+            <Route path="/movies/:movieId" element={<MovieDetailsPage />}> 
+              <Route path="cast" element={<MovieCast />}/>
+              <Route path="reviews" element={<MovieReviews />}/>
+            </Route>
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </Suspense>
+        
       </>
   )
 }

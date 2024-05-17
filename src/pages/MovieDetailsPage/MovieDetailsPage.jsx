@@ -1,4 +1,4 @@
-import { useParams, useLocation, Link, Outlet} from "react-router-dom"
+import { useParams, useLocation, Link, Outlet, Suspense} from "react-router-dom"
 import {fetchMovieDetails} from '../../Api/apiServices'
 import { useState, useEffect } from 'react'
 import toast from 'react-hot-toast'
@@ -75,7 +75,9 @@ export default function MovieDetailsPage () {
                         </li>
                     </ul>
                 </div>
-                <Outlet />
+                <Suspense>
+                    <Outlet />
+                </Suspense>
             </div>
         </main>
     )
