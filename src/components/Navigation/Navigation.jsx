@@ -8,10 +8,10 @@ export default function Navigation () {
     return (
         <header className='container'>
             <nav className={css.nav}>
-            <NavLink to="/" end className={css.navLink}>
+            <NavLink to="/" end className={css.navLink} activeClassName='active'>
                 Home
             </NavLink>
-            <NavLink to="/movies" className={css.navLink}>
+            <NavLink to="/movies" className={css.navLink} activeClassName='active'>
                 Movies
             </NavLink>
             <Suspense fallback={<Loader/>}>

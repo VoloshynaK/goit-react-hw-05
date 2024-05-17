@@ -28,3 +28,7 @@ ul {
     margin-right: auto;
     margin-left: auto;
 }
+
+.active {
+    color: rgb(184, 92, 7);
+}
