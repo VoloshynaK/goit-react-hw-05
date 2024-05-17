@@ -1,6 +1,7 @@
-import { useParams, useLocation, Link, Outlet, Suspense} from "react-router-dom"
+import { useParams, useLocation, Link, Outlet} from "react-router-dom"
 import {fetchMovieDetails} from '../../Api/apiServices'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Suspense } from 'react'
+import Loader from '../../components/Loader/Loader'
 import toast from 'react-hot-toast'
 import { IoArrowBackCircleOutline } from "react-icons/io5";
 import css from './MovieDetailsPage.module.css'
@@ -75,7 +76,7 @@ export default function MovieDetailsPage () {
                         </li>
                     </ul>
                 </div>
-                <Suspense>
+                <Suspense fallback={<Loader/>}>
                     <Outlet />
                 </Suspense>
             </div>
