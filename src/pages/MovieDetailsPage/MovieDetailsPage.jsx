@@ -1,6 +1,6 @@
 import { useParams, useLocation, Link, Outlet} from "react-router-dom"
 import {fetchMovieDetails} from '../../Api/apiServices'
-import { useState, useEffect, Suspense } from 'react'
+import { useState, useEffect, Suspense, useRef } from 'react'
 import Loader from '../../components/Loader/Loader'
 import toast from 'react-hot-toast'
 import { IoArrowBackCircleOutline } from "react-icons/io5";
@@ -23,6 +23,7 @@ export default function MovieDetailsPage () {
     const [movieDetails, setMovieDetails] = useState({});
     const location = useLocation();
     const { movieId } = useParams();
+    const backLinkHref = useRef(location.state?.from || '/');
 
     useEffect(() => {
         if (!movieId) return;
@@ -44,7 +45,7 @@ export default function MovieDetailsPage () {
     return (
         <main className="container">
             <div className={css.detailsPage}>
-                <Link to={location.state?.from ?? '/'} className={css.goBackLink}>
+                <Link to={backLinkHref.current} className={css.goBackLink}>
                     <IoArrowBackCircleOutline className={css.icon}/>
                     Go back</Link>
                 <div className={css.movieInfo}>

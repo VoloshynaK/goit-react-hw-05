@@ -1,7 +1,8 @@
-import { useSearchParams, useLocation, Link} from "react-router-dom";
+import { useSearchParams, useLocation} from "react-router-dom";
 import { useState, useEffect } from 'react';
 import {fetchMovieByKeyword} from '../../Api/apiServices'
 import SearchBar from '../../components/SearchBar/SearchBar'
+import MovieList from "../../components/MovieList/MovieList";
 import Loader from '../../components/Loader/Loader'
 import toast from 'react-hot-toast'
 import css from './MoviesPage.module.css'
@@ -68,18 +69,8 @@ export default function MoviesPage () {
             <div className={css.moviesPage}>
                 <SearchBar onSubmit={handleSubmit}/>
                 {error && <p>There is no movies with this request. Please, try again</p>}
-                <ul className={css.movieList}>
-                    {moviesList.map(movie => {
-                        return (
-                            <li key={movie.id}>
-                                <Link to={`/movies/${movie.id}`} state={{ from: location }} className={css.item}>
-                                    {movie.original_title || movie.name}
-                                </Link>
-                            </li>
-                        );
-                    })}
-                    {loading && <Loader />}
-                </ul>
+                <MovieList movies={moviesList} location={location}/>
+                {loading && <Loader />}
             </div>
         </main>
     )
